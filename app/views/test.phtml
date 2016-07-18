@@ -1,0 +1,57 @@
+<?php /*
+header('Content-Type: text/html; charset=utf-8', true);
+
+$id = '778';
+// $resp = file_get_contents('http://test.local/api/api.php?id='. $id);
+$resp = file_get_contents('http://api.local/orders/'. $id);
+$data = json_decode($resp, true);
+
+if($data['status'] == '200'){
+
+  // echo '<pre>';
+  // var_dump($data['data']);
+  // echo '</pre>';
+
+  echo 'status  : ' . $data['status'] . '</br>';
+  echo 'message : ' . $data['message'] . '</br>';
+
+  foreach ($data['data'] as $key => $value) {
+    if (!is_int($key)  ) {
+      echo $key . ' : ' . $value . '</br>';
+    }
+  }
+}else{
+    echo 'asas: '.$data['error'];
+}
+
+// var_dump($data);
+*/
+
+/**
+ *
+ */
+
+ $input = array(
+ 	'hash'        => 'TQx9Bs9NxfZ7Cj6cdX6T4sbExXTeR2wM',
+ 	'status'      => 3,
+ 	'oid'         => 45,
+ 	'id'          => 879,
+ 	'status2'     => 8,
+ 	'comment'     => 'тестовый комментарий'
+ );
+
+ $url = 'http://api.local/set/status';
+ $json = json_encode($input);
+ $headers = array(
+   'Content-Type: application/json',
+   'Content-Length: ' . strlen($json),
+ );
+
+ $ch = curl_init($url);
+ curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+ curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+ curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+ curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+ $result = curl_exec($ch);
+ var_dump($result);

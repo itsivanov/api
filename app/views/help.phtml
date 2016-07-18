@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Help</title>
+
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,600,400italic,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+	<!-- Bootstrap -->
+  <link href="/public/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/public/css/docs.min.css" rel="stylesheet">
+  <link href="/public/css/github.css" rel="stylesheet">
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="/public/js/bootstrap.min.js"></script>
+  <!-- <script src="/highlight/highlight.min.js"></script> -->
+  <!-- <script>hljs.initHighlightingOnLoad();</script> -->
+</head>
+<body>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix">
+          <ul class="nav bs-docs-sidenav">
+            <li class="active">
+              <a href="#a">Изменение статуса</a>
+              <ul class="nav">
+                <li><a href="#a1">Данные</a></li>
+                <li><a href="#a2">Запрос</a></li>
+                <li><a href="#a3">Ответ</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#b">Список заказов</a>
+              <ul class="nav">
+                <li><a href="#b1">Выборка</a></li>
+                <li><a href="#b2">Запрос</a></li>
+                <li><a href="#b3">Ответ</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#d">Коды ответов</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col-md-9">
+        <div class="holder">
+          <div class="help">
+            <h2 id="a">Изменение статуса</h2>
+            <p>
+              Url: <strong>http://api.univer-mag.com/set/status</strong><br />
+              Method: <strong>post</strong><br />
+              Format: <strong>json</strong>
+            </p>
+            <h3 id="a1">Данные</h3>
+            <div class="entry">
+            <pre>
+<code class="php">
+$input = array(
+  <span>'hash'</span>        => 'API ключ', // обязательное поле
+  <span>'status'</span>      => 'Основной статус', // обязательное поле
+  <span>'oid'</span>         => 'ID заказа по базе рекламодателя', // обязательное поле
+  <span>'id'</span>          => 'ID заказа', // обязательное поле
+  <span>'status2'</span>     => 'Дополнительный статус',
+  <span>'comment'</span>     => 'Комментарий по поводу смены статуса'
+);
+            </code></pre>
+          </div>
+					<h3>Параметры статуса при передачи</h3>
+					<div class="entry">
+					<pre>
+<b>Основной статус:</b>
+ 0: В обработке
+ 1: Подтвержден
+ 2: Аннулирован
+ 3: Забран
+ 4: Возврат
+
+<b>Дополнительный статус:</b>
+ 0: Недозвон
+ 1: Некорректный телефон
+ 2: Отказ
+ 3: Перезвонить
+ 4: Повтор
+ 5: Нет в наличии
+ 6: Перезаказ
+ 7: Ошибочные данные
+ 8: Тест
+ 9: Некорректные данные
+10: Доставка невозможна
+11: Сервис
+12: На модерации
+13: В обработке
+					</pre>
+				</div>
+
+            <h3 id="a2">Запрос</h3>
+            <pre><code class="php">
+$input = array(
+	'hash'        => 'TQx9Bs9NxfZ7Cj6cdX6T4sbExXTeR2wM',
+	'status'      => 3,
+	'oid'         => 45,
+	'id'          => 879,
+	'status2'     => 8,
+	'comment'     => 'тестовый комментарий'
+);
+
+$url = 'http://api.univer-mag.com/set/status';
+$json = json_encode($input);
+$headers = array(
+  'Content-Type: application/json',
+  'Content-Length: ' . strlen($json),
+);
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+$result = curl_exec($ch);
+var_dump($result);
+            </code></pre>
+
+            <h3 id="a3">Ответ</h3>
+            <pre><code class="json">
+<strong>успешная запись</strong>
+{
+  "status": 200,
+  "message": "Ok",
+  "data": {
+		'status'      => 3,
+		'oid'         => 45,
+		'id'          => 879,
+		'status2'     => 8,
+		'comment'     => 'тестовый комментарий'
+  }
+}
+
+<strong>некорректные данные</strong>
+{
+  "status": 409,
+  "message": "Conflict",
+  "errors": [
+    "The [oid] is not valid",
+    "The [id] is not valid",
+    "The [status] is not valid",
+    "The [status2] is not valid"
+  ]
+}
+
+<strong>ошибка авторизации</strong>
+{
+  "status": 401,
+  "message": "Unauthorized"
+}
+            </code></pre>
+          </div>
+
+    <div class="help">
+      <h2 id="b">Список заказов</h2>
+      <p>
+        Url: <strong>http://api.univer-mag.com/get/orders</strong><br />
+        Method: <strong>get</strong><br />
+        Format: <strong>json</strong>
+      </p>
+
+      <h3 id="b1">Выборка</h3>
+      <pre>
+<strong><span>*</span></strong> - обязательные поля
+
+<strong>hash:</strong>      <span>hash</span>=_apiKey_
+<strong>id:</strong>        id=(1,2,3,4,5)
+<strong>oid:</strong>       o=(1,2,3,4,5)
+<strong>offer_id:</strong>  i=(1,2,3,4,5)
+<strong>fields:</strong>    f=(name:value,name:value)
+<strong>created:</strong>   c=(initial,final)
+<strong>limit:</strong>     limit=10
+
+<!-- id заказывает от и до или по одному? -->
+</pre>
+      <h3 id="b2">Запрос</h3>
+      <pre>
+<strong>id:</strong>778
+
+<strong>created:</strong>
+initial=1450130460 [2015-12-15 00:01]
+final=1450475940 [2015-12-18 23:59]
+
+<strong>fields:</strong>
+status:3
+status2:8
+country_code:ua
+
+<div class="query">/get/orders/?hash=8e09dd44255bda9d4b78cee7db395ff8&c=(1462789803,1462962603)&id=778&f=(status:3,status:8,country_code:ru)</div>
+  </pre>
+
+      <h3 id="b3">Ответ</h3>
+      <pre>
+        <code class="json">
+{
+  "status": 200,
+  "message": "Ok",
+  "count": 1,
+  "data": [
+    {
+      "first_name ": "Игорь",
+      "last_name ": "Котенко",
+      "phone ": "89282430978",
+      "country_code ": "ru",
+      "ip": "109.165.78.230",
+      "user_id": "297",
+      "id": "778",
+      "oid": "370742",
+      "amount ": "3900.00",
+      "commission ": "30.00",
+      "currency ": "руб.",
+      "target": "1",
+      "status": "",
+      "status2": "",
+      "created": "1450130460"
+    },
+  ]
+}
+      </code></pre>
+    </div>
+
+    <div class="help">
+      <h2 id="d">Коды ответов</h3>
+      <pre><code class="json">
+<strong>хорошо</strong>
+{
+  "status": 200,
+  "message": "Ok"
+}
+
+<strong>нет содержимого</strong>
+{
+  "status": 204,
+  "message": "No Content"
+}
+
+<strong>не авторизован</strong>
+{
+  "status": 401,
+  "message": "Unauthorized"
+}
+
+<strong>конфликт</strong>
+{
+  "status": 409,
+  "message": "Conflict"
+}
+
+<strong>метод не поддерживается</strong>
+{
+  "status": 405,
+  "message": "Method Not Allowed"
+}
+
+<strong>внутренняя ошибка сервера</strong>
+{
+  "status": 500,
+  "message": "Internal Server Error"
+}
+      </code></pre>
+    </div>
+
+  </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
