@@ -26,13 +26,27 @@ if($data['status'] == '200'){
 
 // var_dump($data);
 */
+// вывести дату с расшифровкой
+// SELECT FROM_UNIXTIME(created),created FROM orders WHERE offer_owner = 202
+// вывод за 2 последних дня: http://api.local/get/orders?hash=222&c=(1456926962,1457113441)
+//http://api.local/get/orders?hash=222&c=(1456926962,1457113441)&limit=4
+//http://api.local/get/orders?hash=222&f=(status:2)&c=(1456926962,1457113441)
+//http://api.local/get/orders?hash=222&f=(status:2,status2:2)&c=(1456926962,1457113441)
+//http://api.local/get/orders?hash=222&f=(status:2,status2:2.country_code:ru)&c=(1456926962,1457113441)
+//http://api.local/get/orders?hash=222&f=(status:2)&c=(1456926962,1457113441)&o=(364902,364919,364971)
+//http://api.local/get/orders?hash=222&f=(status:2)&c=(1456926962,1457113441)&o=(364902,364919,364971)&id=(575,576)
+
+//нужно ли прописывать?
+//http://api.local/get/orders?hash=222&f=(status:2,first_name:%D0%98%D0%B3%D0%BE%D1%80%D1%8C) - нельзя по русски
+//http://api.local/get/orders?hash=222&f=(status:2,ip:178.93.133.95) - не работает поиск по ip
+//http://api.local/get/orders?hash=222&f=(commission:100) - не работает поиск по комисии
 
 /**
  *
  */
 
  $input = array(
- 	'hash'        => 'TQx9Bs9NxfZ7Cj6cdX6T4sbExXTeR2wM',
+ 	'hash'        => '123',
  	'status'      => 3,
  	'oid'         => 45,
  	'id'          => 879,
